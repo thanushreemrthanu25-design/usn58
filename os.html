@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Process States and Context Switching</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+        .state {
+            width: 160px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #ecf0f1;
+            box-shadow: 0 0 5px gray;
+        }
+
+        .state h3 {
+            margin: 5px;
+            color: #34495e;
+        }
+
+        .process {
+            background: #3498db;
+            color: white;
+            padding: 5px;
+            margin: 5px;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #2ecc71;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #log {
+            margin-top: 30px;
+            background: white;
+            padding: 15px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 0 5px gray;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Process State & Context Switching Simulation</h1>
+
+<div class="container">
+    <div class="state" id="new">
+        <h3>New</h3>
+    </div>
+
+    <div class="state" id="ready">
+        <h3>Ready</h3>
+    </div>
+
+    <div class="state" id="running">
+        <h3>Running</h3>
+    </div>
+
+    <div class="state" id="waiting">
+        <h3>Waiting</h3>
+    </div>
+
+    <div class="state" id="terminated">
+        <h3>Terminated</h3>
+    </div>
+</div>
+
+<button onclick="startSimulation()">Start Simulation</button>
+
+<div id="log">
+    <h3>Context Switching Log</h3>
+</div>
+
+<script>
+let pid = 1;
+let readyQueue = [];
+let currentProcess = null;
+
+function log(message) {
+    document.getElementById("log").innerHTML += "<p>" + message + "</p>";
+}
+
+function createProcess() {
+    let p = document.createElement("div");
+    p.className = "process";
+    p.innerText = "P" + pid;
+    p.id = "P" + pid;
+    pid++;
+    return p;
+}
+
+function startSimulation() {
+
+    // NEW → READY
+    let p1 = createProcess();
+    let p2 = createProcess();
+
+    document.getElementById("new").appendChild(p1);
+    document.getElementById("new").appendChild(p2);
+    log("Processes created in NEW state");
+
+    setTimeout(() => {
+        document.getElementById("ready").appendChild(p1);
+        document.getElementById("ready").appendChild(p2);
+        readyQueue.push(p1, p2);
+        log("Processes moved from NEW to READY");
+    }, 1000);
+
+    // READY → RUNNING
+    setTimeout(() => {
+        currentProcess = readyQueue.shift();
+        document.getElementById("running").appendChild(currentProcess);
+        log(currentProcess.innerText + " is RUNNING (CPU allocated)");
+    }, 2000);
+
+    // CONTEXT SWITCH (RUNNING → WAITING)
+    setTimeout(() => {
+        document.getElementById("waiting").appendChild(currentProcess);
+        log("Context Switch: " + currentProcess.innerText + " moved to WAITING (I/O request)");
+    }, 3000);
+
+    // WAITING → READY
+    setTimeout(() => {
+        document.getElementById("ready").appendChild(currentProcess);
+        readyQueue.push(currentProcess);
+        log(currentProcess.innerText + " completed I/O and moved to READY");
+    }, 4000);
+
+    // NEXT PROCESS RUNNING
+    setTimeout(() => {
+        currentProcess = readyQueue.shift();
+        document.getElementById("running").appendChild(currentProcess);
+        log("Context Switch: CPU assigned to " + currentProcess.innerText);
+    }, 5000);
+
+    // RUNNING → TERMINATED
+    setTimeout(() => {
+        document.getElementById("terminated").appendChild(currentProcess);
+        log(currentProcess.innerText + " execution completed → TERMINATED");
+    }, 6000);
+}
+</script>
+
+</body>
+</html>
