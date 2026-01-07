@@ -1,0 +1,530 @@
+1.import java.util.Scanner;
+public class MatrixAddition {
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+// Input for matrix size N
+System.out.print("Enter the order N of the matrices: ");
+int n = sc.nextInt();
+int[][] matrix1 = new int[n][n];
+int[][] matrix2 = new int[n][n];
+int[][] result = new int[n][n];
+// Input for first matrix
+System.out.println("Enter elements for Matrix 1:");
+for (int i = 0; i < n; i++) {
+for (int j = 0; j < n; j++) {
+System.out.print("Element [" + i + "][" + j + "]: ");
+matrix1[i][j] = sc.nextInt();
+}
+}
+// Input for second matrix
+System.out.println("Enter elements for Matrix 2:");
+for (int i = 0; i < n; i++) {
+for (int j = 0; j < n; j++) {
+System.out.print("Element [" + i + "][" + j + "]: ");
+matrix2[i][j] = sc.nextInt();
+}
+}
+// Adding the matrices
+for (int i = 0; i < n; i++) {
+for (int j = 0; j < n; j++) {
+result[i][j] = matrix1[i][j] + matrix2[i][j];
+}
+}
+// Displaying the result
+System.out.println("\nResultant Matrix after Addition:");
+for (int i = 0; i < n; i++) {
+for (int j = 0; j < n; j++) {
+System.out.print(result[i][j] + "\t");
+}
+System.out.println();
+}
+sc.close();
+}
+}
+------------------------------------------------------------------------------
+2.import java.util.Scanner;
+// Stack class
+class Stack {
+private int maxSize = 10; // Maximum stack size
+private int[] stackArray;
+private int top;
+// Constructor
+public Stack() {
+stackArray = new int[maxSize];
+top = -1;
+}
+// Push method
+public void push(int value) {
+if (top == maxSize - 1) {
+System.out.println("Stack Overflow! Cannot push " + value);
+} else {
+stackArray[++top] = value;
+System.out.println(value + " pushed to stack.");
+}
+}
+// Pop method
+public int pop() {
+if (top == -1) {
+System.out.println("Stack Underflow! Stack is empty.");
+return -1;
+} else {
+int value = stackArray[top--];
+System.out.println(value + " popped from stack.");
+return value
+}
+}
+// Display method
+public void display() {
+if (top == -1) {
+System.out.println("Stack is empty.");
+} else {
+System.out.println("Stack elements are (Top to Bottom):");
+for (int i = top; i >= 0; i--) {
+System.out.println(stackArray[i]);
+}
+}
+}
+}
+// Main class
+public class StackDemo {
+public static void main(String[] args) {
+Stack stack = new Stack();
+Scanner sc = new Scanner(System.in);
+int choice, value;
+do {
+System.out.println("\n==== Stack Operations Menu ====");
+System.out.println("1. Push");
+System.out.println("2. Pop");
+System.out.println("3. Display");
+System.out.println("4. Exit");
+System.out.print("Enter your choice (1-4): ");
+choice = sc.nextInt();
+switch (choice) {
+case 1:
+System.out.print("Enter value to push: ");
+value = sc.nextInt();
+stack.push(value);
+break;
+case 2:
+stack.pop();
+break;
+case 3:
+stack.display();
+break;
+case 4:
+System.out.println("Exiting the program...");
+break;
+default:
+System.out.println("Invalid choice! Please enter between 1 to 4.");
+}
+} while (choice != 4);
+sc.close();
+}
+}
+-------------------------------------------------------------------------------------------
+3.import java.util.Scanner;
+// Employee class
+class Employee {
+private int id;
+private String name;
+private double salary;
+// Constructor to initialize employee details
+public Employee(int id, String name, double salary) {
+this.id = id;
+this.name = name;
+this.salary = salary;
+}
+// Method to display employee details
+public void display() {
+System.out.println(" ");
+System.out.println("Employee ID : " + id);
+System.out.println("Employee Name : " + name);
+System.out.println("Employee Salary: ₹" + salary);
+System.out.println(" ");
+}
+// Method to raise salary by a given percentage
+public void raiseSalary(double percent) {
+if (percent > 0) {
+double increment = salary * percent / 100;
+salary += increment;
+System.out.println("Salary increased by " + percent + "% (₹" + increment + ")");
+} else {
+System.out.println("Invalid percentage. Salary not changed.");
+}
+}
+}
+// Main class
+public class EmployeeDemo {
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+// Input employee details
+System.out.print("Enter Employee ID: ");
+int id = sc.nextInt();
+sc.nextLine(); // Clear input buffer
+System.out.print("Enter Employee Name: ");
+String name = sc.nextLine();
+System.out.print("Enter Employee Salary: ");
+double salary = sc.nextDouble();
+// Create Employee object
+Employee emp = new Employee(id, name, salary);
+// Display initial details
+System.out.println("\n--- Employee Details Before Salary Raise ---");
+emp.display();
+// Input raise percentage
+System.out.print("\nEnter percentage to raise salary: ");
+double percent = sc.nextDouble();
+// Apply raise
+emp.raiseSalary(percent);
+// Display updated details
+System.out.println("\n--- Employee Details After Salary Raise ---");
+emp.display();
+sc.close();
+}
+}
+----------------------------------------------------------------------------------
+4.(1). MyPoint.java
+public class MyPoint {
+// Instance variables
+private int x;
+private int y;
+// Default constructor (0, 0)
+public MyPoint() {
+this.x = 0;
+this.y = 0;
+}
+// Overloaded constructor with parameters
+public MyPoint(int x, int y) {
+this.x = x;
+this.y = y;
+}
+// Setter method to set both x and y
+public void setXY(int x, int y) {
+this.x = x;
+this.y = y;
+}
+// Getter method that returns x and y in an array
+public int[] getXY() {
+return new int[] { x, y };
+}
+// toString method
+public String toString() {
+return "(" + x + ", " + y + ")";
+}
+// Method to calculate distance to another point with (x, y)
+public double distance(int x, int y) {
+int dx = this.x - x;
+int dy = this.y - y;
+return Math.sqrt(dx * dx + dy * dy);
+}
+// Overloaded distance method to another MyPoint object
+public double distance(MyPoint another) {
+int dx = this.x - another.x;
+int dy = this.y - another.y;
+return Math.sqrt(dx * dx + dy * dy);
+}
+// Overloaded distance method to the origin (0, 0)
+public double distance() {
+return Math.sqrt(x * x + y * y);
+}
+}
+(2). TestMyPoint.java
+public class TestMyPoint {
+public static void main(String[] args) {
+// Create points
+MyPoint p1 = new MyPoint(); // Default (0,0)
+MyPoint p2 = new MyPoint(3, 4); // (3,4)
+// Test toString()
+System.out.println("p1: " + p1); // (0, 0)
+System.out.println("p2: " + p2); // (3, 4)
+// Test setXY()
+p1.setXY(5, 6);
+System.out.println("After setXY, p1: " + p1); // (1, 2)
+// Test getXY()
+int[] coords = p1.getXY();
+System.out.println("p1 x: " + coords[0] + ", y: " + coords[1]);
+// Test distance(x, y)
+double d1 = p1.distance(4, 6);
+System.out.println("Distance from p1 to (4,6): " + d1);
+// Test distance(MyPoint another)
+double d2 = p1.distance(p2);
+System.out.println("Distance from p1 to p2: " + d2);
+// Test distance() to origin
+double d3 = p2.distance();
+System.out.println("Distance from p2 to origin: " + d3);
+}
+}
+-------------------------------------------------------------------------------------------------
+5.// Base class
+class Shape {
+void draw() {
+System.out.println("Drawing Shape");
+}
+void erase() {
+System.out.println("Erasing Shape");
+}
+}
+// Subclass Circle
+class Circle extends Shape {
+void draw() {
+System.out.println("Drawing Circle");
+}
+void erase() {
+System.out.println("Erasing Circle");
+}
+}
+// Subclass Triangle
+class Triangle extends Shape {
+void draw() {
+System.out.println("Drawing Triangle");
+}
+void erase() {
+System.out.println("Erasing Triangle");
+}
+}
+// Subclass Square
+class Square extends Shape {
+void draw() {
+System.out.println("Drawing Square");
+}
+void erase() {
+System.out.println("Erasing Square");
+}
+}
+// Main class to demonstrate polymorphism
+public class ShapeDemo {
+public static void main(String[] args) {
+// Create shape references pointing to different objects
+Shape shape;
+shape = new Circle();
+shape.draw();
+shape.erase();
+shape = new Triangle();
+shape.draw();
+shape.erase();
+shape = new Square();
+shape.draw();
+shape.erase();
+}
+}
+---------------------------------------------------------------------------------------------
+6.abstract class Shape1 {
+abstract void area();
+abstract void perimeter();
+}
+class Circle1 extends Shape1 {
+double r;
+Circle1(double radius) {
+r = radius;
+}
+void area() {
+System.out.println("Area of Circle: " + (3.14 * r * r));
+}
+void perimeter() {
+System.out.println("Perimeter of Circle: " + (2 * 3.14 * r));
+}
+}
+class Triangle1 extends Shape1 {
+double a, b, c;
+Triangle1(double x, double y, double z) {
+a = x;
+b = y;
+c = z;
+}
+void area() {
+double s = (a + b + c) / 2;
+double ar = Math.sqrt(s * (s - a) * (s - b) * (s - c));
+System.out.println("Area of Triangle: " + ar);
+}
+void perimeter() {
+System.out.println("Perimeter of Triangle: " + (a + b + c));
+}
+}
+public class ShapeTest {
+public static void main(String[] args) {
+Circle1 c = new Circle1(5);
+c.area();
+c.perimeter();
+System.out.println();
+Triangle1 t = new Triangle1(3, 4, 5);
+t.area();
+t.perimeter();
+}
+}
+------------------------------------------------------------------------------------------
+7.// Interface Resizable
+interface Resizable {
+void resizeWidth(int width);
+void resizeHeight(int height);
+}
+// Rectangle class implementing Resizable
+class Rectangle implements Resizable {
+int width;
+int height;
+// Constructor
+Rectangle(int w, int h) {
+width = w;
+height = h;
+}
+// Method to display current width and height
+void display() {
+System.out.println("Width: " + width + ", Height: " + height);
+}
+// Implement resizeWidth method
+public void resizeWidth(int newWidth) {
+width = newWidth;
+}
+// Implement resizeHeight method
+public void resizeHeight(int newHeight) {
+height = newHeight;
+}
+}
+// Main class
+public class ResizeTest {
+public static void main(String[] args) {
+// Create rectangle object
+Rectangle rect = new Rectangle(10, 20);
+System.out.println("Original Size:");
+rect.display();
+// Resize width and height
+rect.resizeWidth(30);
+rect.resizeHeight(40);
+System.out.println("Resized Size:");
+rect.display();
+}
+-------------------------------------------------------------------------------
+8.// Outer class
+class Outer {
+void display() {
+System.out.println("This is the outer class display method.");
+}
+// Inner class
+class Inner {
+void display() {
+System.out.println("This is the inner class display method.");
+}
+}
+}
+// Main class
+public class OuterInnerTest {
+public static void main(String[] args) {
+// Create outer class object
+Outer outer = new Outer();
+outer.display(); // Call outer class display
+// Create inner class object using outer class object
+Outer.Inner inner = outer.new Inner();
+inner.display(); // Call inner class display
+}
+}
+-------------------------------------------------------------------------------------------
+9.// Custom Exception class
+class DivisionByZeroException extends Exception {
+// Constructor
+DivisionByZeroException(String message) {
+super(message);
+}
+}
+// Main class
+public class DivisionTest {
+public static void main(String[] args) {
+int num = 10;
+int den = 0; // Deliberately setting denominator to zero
+try {
+if (den == 0) {
+throw new DivisionByZeroException("Division by zero is not allowed!");
+}
+int result = num / den;
+System.out.println("Result: " + result);
+}
+catch (DivisionByZeroException e) {
+System.out.println("Exception Caught: " + e.getMessage());
+}
+finally {
+System.out.println("Finally block executed.");
+}
+}
+}
+--------------------------------------------------------------------------------------
+10.File: mypack/Message.java
+package mypack; // Declare package name
+// Class inside the package
+public class Message {
+public void display() {
+System.out.println("Hello from mypack!");
+}
+}
+Step 2: Create the Main Class to Use the Package
+File: TestPackage.java
+import mypack.Message; // Import the class from mypack
+public class TestPackage {
+public static void main(String[] args) {
+Message msg = new Message();
+msg.display();
+}
+}
+---------------------------------------------------------------------------------------
+11.// Create a class that implements Runnable
+class MyThread implements Runnable {
+String threadName;
+// Constructor
+MyThread(String name) {
+threadName = name;
+}
+// The run method contains the code that runs in the thread
+public void run() {
+for (int i = 1; i <= 5; i++) {
+System.out.println(threadName + " - Count: " + i);
+try {
+Thread.sleep(500); // Suspend thread for 500 milliseconds
+} catch (InterruptedException e) {
+System.out.println(threadName + " interrupted.");
+}
+}
+System.out.println(threadName + " finished.");
+}
+}
+// Main class
+public class RunnableThreadExample {
+public static void main(String[] args) {
+// Create Runnable objects
+MyThread t1 = new MyThread("Thread-1");
+MyThread t2 = new MyThread("Thread-2");
+// Create Thread objects with Runnable
+Thread thread1 = new Thread(t1);
+Thread thread2 = new Thread(t2);
+// Start the threads
+thread1.start();
+thread2.start();
+}
+}
+------------------------------------------------------------------------------------
+12.class MyThread1 extends Thread {
+MyThread1() {
+super("ChildThread"); // Call Thread class constructor to set thread name
+start(); // Start the thread
+}
+public void run() {
+for (int i = 1; i <= 5; i++) {
+System.out.println(getName() + ": " + i);
+try {
+Thread.sleep(500); // Pause for 500 milliseconds
+} catch (Exception e) {
+System.out.println(e);
+}
+}
+}
+}
+public class ThreadExample {
+public static void main(String[] args) {
+MyThread1 t = new MyThread1(); // Create and start child thread
+// Main thread work
+for (int i = 1; i <= 5; i++) {
+System.out.println("Main Thread: " + i);
+try {
+Thread.sleep(500); // Pause for 500 milliseconds
+} catch (Exception e) {
+System.out.println(e);
+}
+}
+}
+}
+-------------------------------------------------------------------------------------------------
