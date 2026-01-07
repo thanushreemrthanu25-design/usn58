@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Java Learning Browser History</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+    }
+
+    .app {
+        width: 600px;
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(14px);
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 6px;
+    }
+
+    .subtitle {
+        text-align: center;
+        font-size: 13px;
+        opacity: 0.85;
+        margin-bottom: 14px;
+    }
+
+    .platforms {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 14px;
+    }
+
+    .platforms button {
+        flex: 1;
+        margin: 0 6px;
+        padding: 10px;
+        border: none;
+        border-radius: 16px;
+        color: white;
+        font-size: 15px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .platforms button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+    }
+
+    .google { background: #4285F4; }
+    .youtube { background: #FF0000; }
+    .docs { background: #0F9D58; }
+
+    .history {
+        margin-top: 10px;
+    }
+
+    .history-item {
+        background: rgba(255,255,255,0.2);
+        padding: 12px;
+        border-radius: 14px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .history-item:hover {
+        background: rgba(255,255,255,0.35);
+    }
+
+    .controls {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .controls button {
+        padding: 8px 18px;
+        border-radius: 14px;
+        border: none;
+        cursor: pointer;
+        background: rgba(0,0,0,0.4);
+        color: white;
+    }
+
+    .explanation {
+        margin-top: 14px;
+        padding: 14px;
+        background: rgba(255,255,255,0.25);
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .explanation a {
+        display: inline-block;
+        margin-top: 8px;
+        color: #fff;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+    <h2>Java Learning Browser History</h2>
+    <div class="subtitle">Simulation of browsing Java resources</div>
+
+    <div class="platforms">
+        <button class="google" onclick="loadPlatform('google')">Google</button>
+        <button class="youtube" onclick="loadPlatform('youtube')">YouTube</button>
+        <button class="docs" onclick="loadPlatform('docs')">Docs</button>
+    </div>
+
+    <div class="history" id="history"></div>
+
+    <div class="controls">
+        <button onclick="goBack()">⬅ Back</button>
+    </div>
+
+    <div class="explanation" id="explanation">
+        Click on a topic to see explanation and reference.
+    </div>
+</div>
+
+<script>
+    // stack to store history
+    let historyStack = [];
+    let currentPlatform = "google";
+
+    const javaTopics = {
+        google: [
+            "What is Java?",
+            "OOP Concepts in Java",
+            "JVM vs JRE vs JDK"
+        ],
+        youtube: [
+            "Java Basics Tutorial",
+            "Java OOP Concepts Explained",
+            "Exception Handling in Java"
+        ],
+        docs: [
+            "Java Basics PDF",
+            "Java OOP Notes PDF",
+            "Java Exception Handling PDF"
+        ]
+    };
+
+    const info = {
+        "What is Java?": {
+            text: "Java is a high-level, object-oriented programming language known for platform independence."
+        },
+        "OOP Concepts in Java": {
+            text: "Java follows object-oriented principles like encapsulation, inheritance, polymorphism, and abstraction."
+        },
+        "JVM vs JRE vs JDK": {
+            text: "JVM executes bytecode, JRE provides runtime environment, and JDK is used for development."
+        },
+
+        "Java Basics Tutorial": {
+            text: "Beginner-friendly video explaining Java basics.",
+            link: "https://www.youtube.com/watch?v=grEKMHGYyns"
+        },
+        "Java OOP Concepts Explained": {
+            text: "Video explaining OOP concepts with Java examples.",
+            link: "https://www.youtube.com/watch?v=6T_HgnjoYwM"
+        },
+        "Exception Handling in Java": {
+            text: "Video explaining how Java handles runtime exceptions.",
+            link: "https://www.youtube.com/watch?v=Teqhlr9-8ps"
+        },
+
+        "Java Basics PDF": {
+            text: "PDF document covering Java fundamentals.",
+            link: "https://www.tutorialspoint.com/java/java_tutorial.pdf"
+        },
+        "Java OOP Notes PDF": {
+            text: "PDF notes on object-oriented programming in Java.",
+            link: "https://www.javatpoint.com/corejava-pdf"
+        },
+        "Java Exception Handling PDF": {
+            text: "PDF notes for Java exception handling.",
+            link: "https://www.geeksforgeeks.org/wp-content/uploads/Exception-Handling-in-Java.pdf"
+        }
+    };
+
+    function loadPlatform(platform) {
+        currentPlatform = platform;
+        historyStack = [...javaTopics[platform]];
+        showHistory();
+        document.getElementById("explanation").innerText =
+            "Click on a topic to see explanation and reference.";
+    }
+
+    function goBack() {
+        if (historyStack.length === 0) {
+            alert("No more history!");
+            return;
+        }
+        historyStack.pop();
+        showHistory();
+    }
+
+    function showHistory() {
+        const historyDiv = document.getElementById("history");
+        historyDiv.innerHTML = "";
+
+        for (let i = historyStack.length - 1; i >= 0; i--) {
+            const div = document.createElement("div");
+            div.className = "history-item";
+            div.innerText = historyStack[i];
+
+            div.onclick = () => {
+                const d = info[historyStack[i]];
+                document.getElementById("explanation").innerHTML =
+                    d.text + (d.link ? `<a href="${d.link}" target="_blank">Open Reference</a>` : "");
+            };
+
+            historyDiv.appendChild(div);
+        }
+    }
+
+    loadPlatform("google");
+</script>
+
+</body>
+</html>
