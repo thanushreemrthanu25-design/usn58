@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DSA Browser History (Stack)</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        height: 100vh;
+        background: linear-gradient(120deg, #1d2671, #c33764);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    /* floating background bubbles */
+    body::before, body::after {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 50%;
+        filter: blur(80px);
+    }
+
+    body::before {
+        top: -80px;
+        left: -80px;
+    }
+
+    body::after {
+        bottom: -80px;
+        right: -80px;
+    }
+
+    .app {
+        position: relative;
+        width: 560px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+        color: #fff;
+    }
+
+    h2 {
+        text-align: center;
+        margin: 5px 0;
+        font-weight: 600;
+    }
+
+    .sub {
+        text-align: center;
+        font-size: 14px;
+        opacity: 0.85;
+        margin-bottom: 14px;
+    }
+
+    .platforms {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 14px;
+    }
+
+    .platforms button {
+        flex: 1;
+        margin: 0 6px;
+        border: none;
+        padding: 10px;
+        border-radius: 14px;
+        color: white;
+        font-size: 15px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .platforms button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .google { background: linear-gradient(135deg, #4285F4, #0f9d58); }
+    .youtube { background: linear-gradient(135deg, #ff0000, #c31432); }
+    .docs { background: linear-gradient(135deg, #0f9d58, #43e97b); }
+
+    .history-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.2);
+        cursor: pointer;
+        transition: background 0.25s, transform 0.2s;
+    }
+
+    .history-item:hover {
+        background: rgba(255,255,255,0.35);
+        transform: scale(1.02);
+    }
+
+    .history-item img {
+        width: 22px;
+        margin-right: 10px;
+        background: white;
+        padding: 3px;
+        border-radius: 50%;
+    }
+
+    .buttons {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .buttons button {
+        padding: 8px 18px;
+        border-radius: 14px;
+        border: none;
+        cursor: pointer;
+        background: rgba(0,0,0,0.4);
+        color: white;
+        font-size: 14px;
+    }
+
+    .buttons button:hover {
+        background: rgba(0,0,0,0.6);
+    }
+
+    .explanation {
+        margin-top: 14px;
+        padding: 14px;
+        background: rgba(255,255,255,0.25);
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .explanation a {
+        display: inline-block;
+        margin-top: 8px;
+        color: #fff;
+        font-weight: 600;
+        text-decoration: underline;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+    <h2>DSA Browser History</h2>
+    <div class="sub">Stack-based Simulation (Google · YouTube · Docs)</div>
+
+    <div class="platforms">
+        <button class="google" onclick="loadPlatform('google')">Google</button>
+        <button class="youtube" onclick="loadPlatform('youtube')">YouTube</button>
+        <button class="docs" onclick="loadPlatform('docs')">Docs</button>
+    </div>
+
+    <div id="historyList"></div>
+
+    <div class="buttons">
+        <button onclick="goBack()">⬅ Back</button>
+    </div>
+
+    <div class="explanation" id="explanation">
+        Click a search to view explanation and reference.
+    </div>
+</div>
+
+<script>
+    let stack = [];
+    let currentPlatform = "google";
+
+    const icons = {
+        google: "https://www.google.com/favicon.ico",
+        youtube: "https://www.youtube.com/favicon.ico",
+        docs: "https://ssl.gstatic.com/docs/doclist/images/mediatype/icon_1_document_x16.png"
+    };
+
+    const data = {
+        google: [
+            "Stack in Data Structures",
+            "Applications of Stack",
+            "Infix to Postfix Conversion"
+        ],
+        youtube: [
+            "Stack Tutorial",
+            "Stack Using Array",
+            "Stack vs Queue"
+        ],
+        docs: [
+            "Stack Notes",
+            "Stack Algorithm",
+            "Stack Operations"
+        ]
+    };
+
+    const details = {
+        "Stack in Data Structures": {
+            text: "Stack is a linear data structure that follows LIFO principle."
+        },
+        "Applications of Stack": {
+            text: "Used in undo/redo, recursion, expression evaluation, and backtracking."
+        },
+        "Infix to Postfix Conversion": {
+            text: "Stack helps manage operators and precedence during conversion."
+        },
+
+        "Stack Tutorial": {
+            text: "Video explaining stack operations clearly.",
+            link: "https://www.youtube.com/watch?v=F1F2imiOJfk"
+        },
+        "Stack Using Array": {
+            text: "Stack implementation using arrays.",
+            link: "https://www.youtube.com/watch?v=wjI1WNcIntg"
+        },
+        "Stack vs Queue": {
+            text: "Difference between Stack (LIFO) and Queue (FIFO).",
+            link: "https://www.youtube.com/watch?v=0l5DCZK8g0U"
+        },
+
+        "Stack Notes": {
+            text: "PDF notes covering stack basics.",
+            link: "https://www.tutorialspoint.com/data_structures_algorithms/pdf/stack_algorithm.pdf"
+        },
+        "Stack Algorithm": {
+            text: "Detailed stack algorithm PDF.",
+            link: "https://www.geeksforgeeks.org/wp-content/uploads/Stack.pdf"
+        },
+        "Stack Operations": {
+            text: "PDF explaining push, pop and peek.",
+            link: "https://www.cs.cmu.edu/~adamchik/15-121/lectures/Stacks/Stacks.pdf"
+        }
+    };
+
+    function loadPlatform(platform) {
+        currentPlatform = platform;
+        stack = [...data[platform]];
+        document.getElementById("explanation").innerText =
+            "Click a search to view explanation and reference.";
+        showHistory();
+    }
+
+    function goBack() {
+        if (stack.length === 0) {
+            alert("Stack Underflow");
+            return;
+        }
+        stack.pop();
+        showHistory();
+    }
+
+    function showHistory() {
+        const list = document.getElementById("historyList");
+        list.innerHTML = "";
+
+        for (let i = stack.length - 1; i >= 0; i--) {
+            const div = document.createElement("div");
+            div.className = "history-item";
+
+            div.onclick = () => {
+                const d = details[stack[i]];
+                document.getElementById("explanation").innerHTML =
+                    d.text + (d.link ? `<br><a href="${d.link}" target="_blank">Open Reference</a>` : "");
+            };
+
+            div.innerHTML = `
+                <img src="${icons[currentPlatform]}">
+                <span>${stack[i]}</span>
+            `;
+            list.appendChild(div);
+        }
+    }
+
+    loadPlatform("google");
+</script>
+
+</body>
+</html>
